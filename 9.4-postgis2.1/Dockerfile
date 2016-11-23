@@ -1,4 +1,4 @@
-FROM rpi-postgresql:9.4
+FROM tobi312/rpi-postgresql:9.4
 
 ENV POSTGIS_MAJOR 2.1
 ENV POSTGIS_VERSION 2.1.4+dfsg-3
