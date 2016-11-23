@@ -1,10 +1,13 @@
-FROM resin/rpi-raspbian:latest
+#FROM resin/rpi-raspbian:latest
+FROM jsurf/rpi-raspbian:latest
+
+RUN [ "cross-build-start" ]
 
 # explicitly set user/group IDs
 RUN groupadd -r postgres --gid=999 && useradd -r -g postgres --uid=999 postgres
 
 # grab gosu for easy step-down from root
-ENV GOSU_VERSION 1.7
+ENV GOSU_VERSION 1.10
 RUN set -x \
 	&& apt-get update && apt-get install -y --no-install-recommends ca-certificates wget && rm -rf /var/lib/apt/lists/* \
 	&& wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)" \
@@ -48,6 +51,8 @@ COPY docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
+
+RUN [ "cross-build-end" ]
 
 EXPOSE 5432
 CMD ["postgres"]
