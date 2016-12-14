@@ -3,6 +3,8 @@ FROM jsurf/rpi-raspbian:latest
 
 RUN [ "cross-build-start" ]
 
+ENV TZ Europe/Berlin
+
 # explicitly set user/group IDs
 RUN groupadd -r postgres --gid=999 && useradd -r -g postgres --uid=999 postgres
 
@@ -26,7 +28,7 @@ ENV LANG en_US.utf8
 RUN mkdir /docker-entrypoint-initdb.d
 
 ENV PG_MAJOR 9.4
-ENV PG_VERSION 9.4+165+deb8u1
+ENV PG_VERSION 9.4*
 
 RUN apt-get update \
 	&& apt-get install -y postgresql-common \
