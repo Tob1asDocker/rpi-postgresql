@@ -3,7 +3,7 @@
 This is a port of the official PostgreSQL image https://hub.docker.com/_/postgres/ for Raspberry Pi / armhf.
 
 ### Supported tags and respective `Dockerfile` links
--	`9.6` *Coming soon*
+-	[`9.6` TESTVERSION (*Dockerfile*)](https://github.com/TobiasH87Docker/rpi-postgresql/blob/master/9.6/Dockerfile)
 -	[`9.4`, `latest` (*Dockerfile*)](https://github.com/TobiasH87Docker/rpi-postgresql/blob/master/9.4/Dockerfile)
 
 ### What is PostgreSQL?
