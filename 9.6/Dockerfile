@@ -31,9 +31,9 @@ ENV PG_MAJOR 9.6
 ENV PG_VERSION 9.6*
 
 RUN apt-get update \
-	&& apt-get install -y -t stretch postgresql-common \
+	&& apt-get install -y postgresql-common \
 	&& sed -ri 's/#(create_main_cluster) .*$/\1 = false/' /etc/postgresql-common/createcluster.conf \
-	&& apt-get install -y -t stretch \
+	&& apt-get install -y \
 		postgresql=$PG_VERSION \
 		postgresql-contrib=$PG_VERSION \
 	&& rm -rf /var/lib/apt/lists/*
