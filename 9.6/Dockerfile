@@ -1,14 +1,9 @@
-#FROM resin/rpi-raspbian:latest
-FROM jsurf/rpi-raspbian:latest
+#FROM resin/rpi-raspbian:stretch
+FROM jsurf/rpi-raspbian:stretch
 
 RUN [ "cross-build-start" ]
 
 ENV TZ Europe/Berlin
-
-RUN echo "deb http://mirrordirector.raspbian.org/raspbian/ stretch main contrib non-free rpi" >> /etc/apt/sources.list.d/stretch.list && echo 'Package: *\n\
-Pin: release n=stretch\n\
-Pin-Priority: 400\n'\
->> /etc/apt/preferences.d/stretch-pinning
 
 # explicitly set user/group IDs
 RUN groupadd -r postgres --gid=999 && useradd -r -g postgres --uid=999 postgres
