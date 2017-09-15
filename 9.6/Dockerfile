@@ -6,11 +6,6 @@ RUN [ "cross-build-start" ]
 
 ENV TZ Europe/Berlin
 
-#RUN echo "deb http://mirrordirector.raspbian.org/raspbian/ stretch main contrib non-free rpi" >> /etc/apt/sources.list.d/stretch.list && echo 'Package: *\n\
-#Pin: release n=stretch\n\
-#Pin-Priority: 400\n'\
-#>> /etc/apt/preferences.d/stretch-pinning
-
 # explicitly set user/group IDs
 RUN groupadd -r postgres --gid=999 && useradd -r -g postgres --uid=999 postgres
 
@@ -37,7 +32,7 @@ ENV PG_MAJOR 9.6
 ENV PG_VERSION 9.6*
 
 RUN apt-get update \
-	&& apt-get install -y -t stretch postgresql-common \
+	&& apt-get install -y postgresql-common \
 	&& sed -ri 's/#(create_main_cluster) .*$/\1 = false/' /etc/postgresql-common/createcluster.conf \
 	&& apt-get install -y \
 		postgresql=$PG_VERSION \
