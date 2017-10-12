@@ -1,6 +1,4 @@
-#FROM resin/rpi-raspbian:jessie
-#FROM jsurf/rpi-raspbian:latest
-FROM jsurf/rpi-raspbian:stretch
+FROM resin/rpi-raspbian:stretch
 
 RUN [ "cross-build-start" ]
 
@@ -8,6 +6,16 @@ ENV TZ Europe/Berlin
 
 # explicitly set user/group IDs
 RUN groupadd -r postgres --gid=999 && useradd -r -g postgres --uid=999 postgres
+
+RUN set -ex; \
+	if ! command -v gpg > /dev/null; then \
+		apt-get update; \
+		apt-get install -y --no-install-recommends \
+			gnupg2 \
+			dirmngr \
+		; \
+		rm -rf /var/lib/apt/lists/*; \
+	fi
 
 # grab gosu for easy step-down from root
 ENV GOSU_VERSION 1.10
@@ -18,12 +26,15 @@ RUN set -x \
 	&& export GNUPGHOME="$(mktemp -d)" \
 	&& gpg --keyserver ha.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 \
 	&& gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
-	&& rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc \
+	&& rm -rf "$GNUPGHOME" /usr/local/bin/gosu.asc \
 	&& chmod +x /usr/local/bin/gosu \
 	&& gosu nobody true \
 	&& apt-get purge -y --auto-remove ca-certificates wget
 
 # make the "en_US.UTF-8" locale so postgres will be utf-8 enabled by default
+RUN apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/* \
+	&& ln -s /etc/locale.alias /usr/share/locale/locale.alias \
+	&& localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
 ENV LANG en_US.utf8
 
 RUN mkdir /docker-entrypoint-initdb.d
@@ -31,29 +42,32 @@ RUN mkdir /docker-entrypoint-initdb.d
 ENV PG_MAJOR 9.6
 ENV PG_VERSION 9.6*
 
-RUN apt-get update \
-	&& apt-get install -y postgresql-common \
-	&& sed -ri 's/#(create_main_cluster) .*$/\1 = false/' /etc/postgresql-common/createcluster.conf \
-	&& apt-get install -y \
-		postgresql=$PG_VERSION \
-		postgresql-contrib=$PG_VERSION \
-	&& rm -rf /var/lib/apt/lists/*
+RUN apt-get update ; \
+	apt-get install -y postgresql-common; \
+	sed -ri 's/#(create_main_cluster) .*$/\1 = false/' /etc/postgresql-common/createcluster.conf; \
+	apt-get install -y \
+		"postgresql-$PG_MAJOR=$PG_VERSION" \
+		"postgresql-contrib-$PG_MAJOR=$PG_VERSION" \
+	; \
+	\
+	rm -rf /var/lib/apt/lists/*;
 
 # make the sample config easier to munge (and "correct by default")
 RUN mv -v /usr/share/postgresql/$PG_MAJOR/postgresql.conf.sample /usr/share/postgresql/ \
 	&& ln -sv ../postgresql.conf.sample /usr/share/postgresql/$PG_MAJOR/ \
 	&& sed -ri "s!^#?(listen_addresses)\s*=\s*\S+.*!\1 = '*'!" /usr/share/postgresql/postgresql.conf.sample
 
-RUN mkdir -p /var/run/postgresql && chown -R postgres /var/run/postgresql
+RUN mkdir -p /var/run/postgresql && chown -R postgres:postgres /var/run/postgresql && chmod 2777 /var/run/postgresql
 
 ENV PATH /usr/lib/postgresql/$PG_MAJOR/bin:$PATH
 ENV PGDATA /var/lib/postgresql/data
+RUN mkdir -p "$PGDATA" && chown -R postgres:postgres "$PGDATA" && chmod 777 "$PGDATA" # this 777 will be replaced by 700 at runtime (allows semi-arbitrary "--user" values)
 VOLUME /var/lib/postgresql/data
 
-COPY docker-entrypoint.sh /
-RUN chmod +x /docker-entrypoint.sh
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x usr/local/bin/docker-entrypoint.sh && ln -s usr/local/bin/docker-entrypoint.sh / # backwards compat
 
-ENTRYPOINT ["/docker-entrypoint.sh"]
+ENTRYPOINT ["docker-entrypoint.sh"]
 
 RUN [ "cross-build-end" ]
 
