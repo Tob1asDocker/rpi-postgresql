@@ -1,4 +1,4 @@
-FROM resin/rpi-raspbian:jessie
+FROM balenalib/rpi-raspbian:jessie
 
 RUN [ "cross-build-start" ]
 
