@@ -1,9 +1,9 @@
 FROM balenalib/rpi-raspbian:jessie
 
-LABEL org.opencontainers.image.authors="Tobias Hargesheimer <docker@ison.ws>" \
+LABEL org.opencontainers.image.authors="Docker * Authors, Tobias Hargesheimer <docker@ison.ws>" \
 	org.opencontainers.image.title="PostgreSQL" \
 	org.opencontainers.image.description="Debian 8 Jessie with PostgreSQL 9.4 on arm arch" \
-	org.opencontainers.image.licenses="Apache-2.0" \
+	org.opencontainers.image.licenses="MIT" \
 	org.opencontainers.image.url="https://hub.docker.com/r/tobi312/rpi-postgresql" \
 	org.opencontainers.image.source="https://github.com/Tob1asDocker/rpi-postgresql"
 
