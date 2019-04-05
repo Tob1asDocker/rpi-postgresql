@@ -1,6 +1,6 @@
 # PostgreSQL on Raspberry Pi / ARM
 
-This is a port of the official PostgreSQL image https://hub.docker.com/_/postgres/ for Raspberry Pi / armhf.
+This is a port of the official PostgreSQL image https://hub.docker.com/_/postgres/ for Raspberry Pi / ARM.
 
 ### Supported tags and respective `Dockerfile` links
 -	[`9.6`, `latest` (*Dockerfile*)](https://github.com/Tob1asDocker/rpi-postgresql/blob/master/stretch.armhf.9_6.Dockerfile)
