@@ -4,7 +4,6 @@ This is a port of the official PostgreSQL image https://hub.docker.com/_/postgre
 
 ### Supported tags and respective `Dockerfile` links
 -	[`9.6`, `latest` (*Dockerfile*)](https://github.com/Tob1asDocker/rpi-postgresql/blob/master/stretch.armhf.9_6.Dockerfile)
--	[`9.4` (*Dockerfile*)](https://github.com/Tob1asDocker/rpi-postgresql/blob/master/jessie.armhf.9_4.Dockerfile)
 
 ### What is PostgreSQL?
 PostgreSQL, often simply "Postgres", is an object-relational database management system (ORDBMS) with an emphasis on extensibility and standards-compliance. As a database server, its primary function is to store data, securely and supporting best practices, and retrieve it later, as requested by other software applications, be it those on the same computer or those running on another computer across a network (including the Internet). It can handle workloads ranging from small single-machine applications to large Internet-facing applications with many concurrent users. Recent versions also provide replication of the database itself for security and scalability.
